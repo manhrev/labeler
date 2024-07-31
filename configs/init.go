@@ -3,7 +3,7 @@ package configs
 import (
 	"os"
 
-	"github.com/codolabs/fushon/pkg/api/go/auth/authconnect"
+	"github.com/manhrev/labeler/pkg/api/go/auth/authconnect"
 )
 
 func GetConfigs() *Config {

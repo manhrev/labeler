@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codolabs/fushon/internal/model/auth"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/manhrev/labeler/internal/model/auth"
 )
 
 func (s *Service) Create(username string, userID int64) (string, error) {

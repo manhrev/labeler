@@ -8,8 +8,8 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	auth "github.com/codolabs/fushon/pkg/api/go/auth"
-	rpc "github.com/codolabs/fushon/pkg/api/go/auth/rpc"
+	auth "github.com/manhrev/labeler/pkg/api/go/auth"
+	rpc "github.com/manhrev/labeler/pkg/api/go/auth/rpc"
 	http "net/http"
 	strings "strings"
 )

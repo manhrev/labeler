@@ -1,7 +1,7 @@
 package grpc
 
 import (
-	"github.com/codolabs/fushon/configs"
+	"github.com/manhrev/labeler/configs"
 	"go.uber.org/zap"
 )
 

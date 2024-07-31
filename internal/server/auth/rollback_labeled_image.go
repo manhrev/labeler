@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/codolabs/fushon/internal/const/header"
-	"github.com/codolabs/fushon/internal/util"
-	"github.com/codolabs/fushon/pkg/api/go/auth/rpc"
-	"github.com/codolabs/fushon/pkg/db"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/manhrev/labeler/internal/const/header"
+	"github.com/manhrev/labeler/internal/util"
+	"github.com/manhrev/labeler/pkg/api/go/auth/rpc"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 func (s *Server) RollbackLabeledImage(

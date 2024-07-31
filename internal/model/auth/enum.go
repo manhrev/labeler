@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"github.com/codolabs/fushon/pkg/api/go/auth/model"
-	"github.com/codolabs/fushon/pkg/db"
+	"github.com/manhrev/labeler/pkg/api/go/auth/model"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 func CategoryDbToPb(category db.Category) model.Category {

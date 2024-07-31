@@ -5,7 +5,7 @@ package rpc;
 import "auth/model/image.proto";
 import "validate/validate.proto";
 
-option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/rpc;rpc";
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth/rpc;rpc";
 
 message RollbackLabeledImageRequest {
     model.Category category = 1 [(validate.rules).enum.defined_only = true];

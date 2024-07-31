@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package model;
 
-option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/model;model";
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth/model;model";
 
 message Image {
     int64 id = 1;

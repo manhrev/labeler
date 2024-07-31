@@ -18,7 +18,7 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	model "github.com/codolabs/fushon/pkg/api/go/auth/model"
+	model "github.com/manhrev/labeler/pkg/api/go/auth/model"
 )
 
 // ensure the imports are used

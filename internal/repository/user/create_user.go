@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/codolabs/fushon/pkg/db"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 func (r *Repository) CreateUser(ctx context.Context, username, password, displayname string, email string) (db.User, error) {

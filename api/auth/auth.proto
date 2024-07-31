@@ -9,7 +9,7 @@ import "auth/rpc/get_image_to_label.proto";
 import "auth/rpc/update_image_after_labeled.proto";
 import "auth/rpc/rollback_labeled_image.proto";
 
-option go_package = "github.com/codolabs/fushon/pkg/api/go/auth;auth";
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth;auth";
 
 service AuthService {
     rpc SignUp(rpc.SignUpRequest) returns (rpc.SignUpResponse) {}

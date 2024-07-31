@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/codolabs/fushon/configs"
-	"github.com/codolabs/fushon/internal/const/environment"
+	"github.com/manhrev/labeler/configs"
+	"github.com/manhrev/labeler/internal/const/environment"
 	"google.golang.org/api/option"
 )
 

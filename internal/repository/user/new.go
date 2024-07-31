@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/codolabs/fushon/pkg/db"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 type Repository struct {

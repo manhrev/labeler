@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/codolabs/fushon/pkg/api/go/auth/model"
-	"github.com/codolabs/fushon/pkg/api/go/auth/rpc"
+	"github.com/manhrev/labeler/pkg/api/go/auth/model"
+	"github.com/manhrev/labeler/pkg/api/go/auth/rpc"
 )
 
 func (s *Server) SignUp(

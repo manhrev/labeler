@@ -3,9 +3,9 @@ package auth
 import (
 	"go.uber.org/zap"
 
-	"github.com/codolabs/fushon/internal/repository"
-	"github.com/codolabs/fushon/internal/service/token"
-	"github.com/codolabs/fushon/pkg/api/go/auth/authconnect"
+	"github.com/manhrev/labeler/internal/repository"
+	"github.com/manhrev/labeler/internal/service/token"
+	"github.com/manhrev/labeler/pkg/api/go/auth/authconnect"
 )
 
 type Server struct {

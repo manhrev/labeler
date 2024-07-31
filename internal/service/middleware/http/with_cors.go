@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	connectcors "connectrpc.com/cors"
-	"github.com/codolabs/fushon/internal/const/header"
+	"github.com/manhrev/labeler/internal/const/header"
 	"github.com/rs/cors"
 )
 

@@ -3,8 +3,8 @@ package token
 import (
 	"strings"
 
-	"github.com/codolabs/fushon/internal/model/auth"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/manhrev/labeler/internal/model/auth"
 )
 
 func (s *Service) Validate(tokenString string) (*auth.Claims, error) {

@@ -6,9 +6,9 @@ import (
 	"strconv"
 
 	"connectrpc.com/connect"
-	"github.com/codolabs/fushon/internal/const/header"
-	"github.com/codolabs/fushon/pkg/api/go/auth/model"
-	"github.com/codolabs/fushon/pkg/api/go/auth/rpc"
+	"github.com/manhrev/labeler/internal/const/header"
+	"github.com/manhrev/labeler/pkg/api/go/auth/model"
+	"github.com/manhrev/labeler/pkg/api/go/auth/rpc"
 )
 
 func (s *Server) Me(

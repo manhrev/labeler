@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/codolabs/fushon/internal/repository/user"
-	"github.com/codolabs/fushon/pkg/db"
 	"github.com/jackc/pgx/v5"
+	"github.com/manhrev/labeler/internal/repository/user"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 type Repository struct {

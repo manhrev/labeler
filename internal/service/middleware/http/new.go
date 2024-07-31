@@ -1,9 +1,9 @@
 package http
 
 import (
-	"github.com/codolabs/fushon/configs"
-	"github.com/codolabs/fushon/internal/repository/user"
-	"github.com/codolabs/fushon/internal/service/token"
+	"github.com/manhrev/labeler/configs"
+	"github.com/manhrev/labeler/internal/repository/user"
+	"github.com/manhrev/labeler/internal/service/token"
 	"go.uber.org/zap"
 )
 

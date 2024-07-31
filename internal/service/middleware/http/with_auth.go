@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"connectrpc.com/connect"
-	"github.com/codolabs/fushon/internal/const/header"
+	"github.com/manhrev/labeler/internal/const/header"
 )
 
 func (s Service) WithAuth(h http.Handler) http.Handler {

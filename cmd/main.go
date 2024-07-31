@@ -14,13 +14,13 @@ import (
 
 	"connectrpc.com/connect"
 	"connectrpc.com/grpcreflect"
-	"github.com/codolabs/fushon/configs"
-	"github.com/codolabs/fushon/internal/repository"
-	"github.com/codolabs/fushon/internal/server/auth"
-	"github.com/codolabs/fushon/internal/service/middleware"
-	"github.com/codolabs/fushon/internal/service/token"
-	"github.com/codolabs/fushon/pkg/api/go/auth/authconnect"
-	"github.com/codolabs/fushon/pkg/db"
+	"github.com/manhrev/labeler/configs"
+	"github.com/manhrev/labeler/internal/repository"
+	"github.com/manhrev/labeler/internal/server/auth"
+	"github.com/manhrev/labeler/internal/service/middleware"
+	"github.com/manhrev/labeler/internal/service/token"
+	"github.com/manhrev/labeler/pkg/api/go/auth/authconnect"
+	"github.com/manhrev/labeler/pkg/db"
 )
 
 func main() {

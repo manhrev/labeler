@@ -1,6 +1,6 @@
 package token
 
-import "github.com/codolabs/fushon/configs"
+import "github.com/manhrev/labeler/configs"
 
 type Service struct {
 	jwtKey             []byte

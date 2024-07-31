@@ -1,4 +1,4 @@
-module github.com/codolabs/fushon
+module github.com/manhrev/labeler
 
 go 1.22.3
 

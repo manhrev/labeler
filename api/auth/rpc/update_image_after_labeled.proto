@@ -5,7 +5,7 @@ package rpc;
 import "validate/validate.proto";
 import "auth/model/image.proto";
 
-option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/rpc;rpc";
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth/rpc;rpc";
 
 message UpdateImageAfterLabeledRequest {
     model.Category category = 1 [(validate.rules).enum = {
