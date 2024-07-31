@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package rpc;
+
+import "auth/model/user_info.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/rpc;rpc";
+
+message SignUpRequest {
+  string username = 1 [(validate.rules).string = {min_len: 1}];
+  string password = 2 [(validate.rules).string = {min_len: 1}];
+  string display_name = 3 [(validate.rules).string = {min_len: 1}];
+  string email = 4 [(validate.rules).string = {min_len: 1}];
+}
+
+message SignUpResponse {
+  model.UserInfo info = 1;
+}

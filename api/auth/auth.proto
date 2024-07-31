@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package auth;
+
+import "auth/rpc/sign_up.proto";
+import "auth/rpc/login.proto";
+import "auth/rpc/me.proto";
+import "auth/rpc/get_image_to_label.proto";
+import "auth/rpc/update_image_after_labeled.proto";
+import "auth/rpc/rollback_labeled_image.proto";
+
+option go_package = "github.com/codolabs/fushon/pkg/api/go/auth;auth";
+
+service AuthService {
+    rpc SignUp(rpc.SignUpRequest) returns (rpc.SignUpResponse) {}
+    rpc Login(rpc.LoginRequest) returns (rpc.LoginResponse) {}
+    rpc Me(rpc.MeRequest) returns (rpc.MeResponse) {}
+
+    rpc GetImageToLabel(rpc.GetImageToLabelRequest) returns (rpc.GetImageToLabelResponse) {}
+    rpc UpdateImageAfterLabeled(rpc.UpdateImageAfterLabeledRequest) returns (rpc.UpdateImageAfterLabeledResponse) {}
+    rpc RollbackLabeledImage(rpc.RollbackLabeledImageRequest) returns (rpc.RollbackLabeledImageResponse) {}
+}

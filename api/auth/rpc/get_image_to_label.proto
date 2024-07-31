@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package rpc;
+
+import "auth/model/user_info.proto";
+
+option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/rpc;rpc";
+
+message MeRequest {}
+
+message MeResponse {
+  model.UserInfo info = 1;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package model;
+
+option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/model;model";
+
+message UserInfo {
+  int64 id = 1;
+  string display_name = 2;
+  string username = 3;
+  string email = 4;
+}
