@@ -2,12 +2,14 @@ syntax = "proto3";
 
 package rpc;
 
-import "auth/model/user_info.proto";
+import "auth/model/image.proto";
+import "validate/validate.proto";
 
 option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/rpc;rpc";
 
-message MeRequest {}
-
-message MeResponse {
-  model.UserInfo info = 1;
+message RollbackLabeledImageRequest {
+    model.Category category = 1 [(validate.rules).enum.defined_only = true];
+    string id = 2 [(validate.rules).string = {min_len: 1}];
 }
+
+message RollbackLabeledImageResponse {}

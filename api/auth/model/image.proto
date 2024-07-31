@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package model;
+
+option go_package = "github.com/codolabs/fushon/pkg/api/go/auth/model;model";
+
+message Image {
+    int64 id = 1;
+    Category category = 2;
+    BackgroundType background_type = 3;
+    string labeler_id = 4;
+    string name = 5;
+    string display_name = 6;
+    string url1 = 7;
+    string url2 = 8;
+    string url3 = 9;
+    string url_selected = 10;
+}
+
+enum Category {
+    C_NONE = 0;
+    C_BASKETBALL_COMPETITION = 1;
+    C_BASKETBALL_COMPETITOR = 2;
+    C_FOOTBALL_COMPETITION = 3;
+    C_FOOTBALL_COMPETITOR = 4;
+}
+
+enum BackgroundType {
+    BT_NONE = 0;
+    BT_OUTSIDE = 1;
+    BT_FULL = 2;
+}

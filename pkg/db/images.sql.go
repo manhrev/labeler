@@ -39,21 +39,30 @@ func (q *Queries) GetImageToLabel(ctx context.Context) (Image, error) {
 const updateImageAfterLabeled = `-- name: UpdateImageAfterLabeled :one
 UPDATE images
   set 
-    url_selected = $2,
-    labeler_id = $3,
+    url_selected = $3,
+    labeler_id = $4,
+    background_type = $5,
     updated_at = now()
-WHERE id = $1
+WHERE id = $1 AND category = $2
 RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
 type UpdateImageAfterLabeledParams struct {
-	ID          int64
-	UrlSelected pgtype.Int2
-	LabelerID   pgtype.Int8
+	ID             int64
+	Category       Category
+	UrlSelected    pgtype.Int2
+	LabelerID      pgtype.Int8
+	BackgroundType NullBackgroundType
 }
 
 func (q *Queries) UpdateImageAfterLabeled(ctx context.Context, arg UpdateImageAfterLabeledParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageAfterLabeled, arg.ID, arg.UrlSelected, arg.LabelerID)
+	row := q.db.QueryRow(ctx, updateImageAfterLabeled,
+		arg.ID,
+		arg.Category,
+		arg.UrlSelected,
+		arg.LabelerID,
+		arg.BackgroundType,
+	)
 	var i Image
 	err := row.Scan(
 		&i.ID,
@@ -75,19 +84,20 @@ func (q *Queries) UpdateImageAfterLabeled(ctx context.Context, arg UpdateImageAf
 const updateImageLabelerID = `-- name: UpdateImageLabelerID :one
 UPDATE images
   set 
-    labeler_id = $2,
+    labeler_id = $3,
     updated_at = now()
-WHERE id = $1
+WHERE id = $1 AND category = $2
 RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
 type UpdateImageLabelerIDParams struct {
 	ID        int64
+	Category  Category
 	LabelerID pgtype.Int8
 }
 
 func (q *Queries) UpdateImageLabelerID(ctx context.Context, arg UpdateImageLabelerIDParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageLabelerID, arg.ID, arg.LabelerID)
+	row := q.db.QueryRow(ctx, updateImageLabelerID, arg.ID, arg.Category, arg.LabelerID)
 	var i Image
 	err := row.Scan(
 		&i.ID,
@@ -106,22 +116,29 @@ func (q *Queries) UpdateImageLabelerID(ctx context.Context, arg UpdateImageLabel
 	return i, err
 }
 
-const updateImageUrlSelected = `-- name: UpdateImageUrlSelected :one
+const updateImageUrlSelectedByLabelerID = `-- name: UpdateImageUrlSelectedByLabelerID :one
 UPDATE images
   set 
-    url_selected = $2,
+    url_selected = $4,
     updated_at = now()
-WHERE id = $1
+WHERE id = $1 AND category = $2 AND labeler_id = $3
 RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
-type UpdateImageUrlSelectedParams struct {
+type UpdateImageUrlSelectedByLabelerIDParams struct {
 	ID          int64
+	Category    Category
+	LabelerID   pgtype.Int8
 	UrlSelected pgtype.Int2
 }
 
-func (q *Queries) UpdateImageUrlSelected(ctx context.Context, arg UpdateImageUrlSelectedParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageUrlSelected, arg.ID, arg.UrlSelected)
+func (q *Queries) UpdateImageUrlSelectedByLabelerID(ctx context.Context, arg UpdateImageUrlSelectedByLabelerIDParams) (Image, error) {
+	row := q.db.QueryRow(ctx, updateImageUrlSelectedByLabelerID,
+		arg.ID,
+		arg.Category,
+		arg.LabelerID,
+		arg.UrlSelected,
+	)
 	var i Image
 	err := row.Scan(
 		&i.ID,
