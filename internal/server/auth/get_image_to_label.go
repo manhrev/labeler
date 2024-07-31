@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/codolabs/fushon/internal/const/header"
+	"github.com/codolabs/fushon/internal/model/auth"
 	"github.com/codolabs/fushon/internal/util"
 	"github.com/codolabs/fushon/pkg/api/go/auth/model"
 	"github.com/codolabs/fushon/pkg/api/go/auth/rpc"
@@ -32,28 +33,9 @@ func (s *Server) GetImageToLabel(
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("cannot update image labeler id: %v", err))
 	}
 
-	category := model.Category_C_NONE
-	switch image.Category {
-	case db.CategoryCBASKETBALLCOMPETITION:
-		category = model.Category_C_BASKETBALL_COMPETITION
-	case db.CategoryCBASKETBALLCOMPETITOR:
-		category = model.Category_C_BASKETBALL_COMPETITOR
-	case db.CategoryCFOOTBALLCOMPETITION:
-		category = model.Category_C_FOOTBALL_COMPETITION
-	case db.CategoryCFOOTBALLCOMPETITOR:
-		category = model.Category_C_FOOTBALL_COMPETITOR
-	}
-
 	backgroundType := model.BackgroundType_BT_NONE
 	if image.BackgroundType.Valid {
-		switch image.BackgroundType.BackgroundType {
-		case db.BackgroundTypeBTFULL:
-			backgroundType = model.BackgroundType_BT_FULL
-		case db.BackgroundTypeBTOUTSIDE:
-			backgroundType = model.BackgroundType_BT_OUTSIDE
-		case db.BackgroundTypeBTNONE:
-			backgroundType = model.BackgroundType_BT_NONE
-		}
+		backgroundType = auth.BackgroundTypeDbToPb(image.BackgroundType.BackgroundType)
 	}
 
 	urlSelected := ""
@@ -64,7 +46,7 @@ func (s *Server) GetImageToLabel(
 	return connect.NewResponse(&rpc.GetImageToLabelResponse{
 		Image: &model.Image{
 			Id:             image.ID,
-			Category:       category,
+			Category:       auth.CategoryDbToPb(image.Category),
 			BackgroundType: backgroundType,
 			LabelerId:      util.IntToString(int(image.LabelerID.Int64)),
 			Name:           image.Name,
