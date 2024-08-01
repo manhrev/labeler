@@ -9,11 +9,11 @@ plugins:
   - plugin: buf.build/bufbuild/validate-go:v0.9.1
     opt: paths=source_relative
     out: ../pkg/api/go
-  # - plugin: es
-  #   out: pkg/api/ts
-  #   opt:
-  #     - target=js+dts
-  # - plugin: connect-es
-  #   out: pkg/api/ts
-  #   opt:
-  #     - target=js+dts
+  - plugin: es
+    out: ../../frontend/src/lib/api
+    opt:
+      - target=js+dts
+  - plugin: connect-es
+    out: ../../frontend/src/lib/api
+    opt:
+      - target=js+dts
