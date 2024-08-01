@@ -17,3 +17,7 @@ plugins:
     out: ../../frontend/src/lib/api
     opt:
       - target=js+dts
+  - name: connect-query
+    out: ../../frontend/src/lib/api
+    opt:
+      - target=js+dts

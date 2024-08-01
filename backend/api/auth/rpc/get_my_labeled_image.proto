@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package rpc;
+
+import "auth/model/image.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth/rpc;rpc";
+
+message GetMyLabeledImageRequest {
+    model.Category category = 1 [(validate.rules).enum.defined_only = true];
+    string id = 2 [(validate.rules).string = {min_len: 1}];
+}
+
+message GetMyLabeledImageResponse {
+  model.Image image = 1;
+}

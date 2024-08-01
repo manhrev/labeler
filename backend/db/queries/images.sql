@@ -2,6 +2,11 @@
 SELECT * FROM images
 WHERE url_selected IS NULL LIMIT 1;
 
+-- name: GetImageByID :one
+SELECT * FROM images
+WHERE id = $1 AND category = $2 
+LIMIT 1;
+
 -- name: UpdateImageAfterLabeled :one
 UPDATE images
   set 
