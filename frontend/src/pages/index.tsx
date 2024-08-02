@@ -2,7 +2,6 @@ import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
 
 import { title, subtitle } from "@/components/primitives";
-// import { GithubIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
 import { Button } from "@nextui-org/button";
 import { useQuery } from "@tanstack/react-query";
