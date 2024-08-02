@@ -1,60 +1,70 @@
-import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
 
-import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+// import { GithubIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
+import { Button } from "@nextui-org/button";
+import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/service/auth";
+import { useNavigate } from "react-router-dom";
+import { ConnectError } from "@connectrpc/connect";
 
 export default function IndexPage() {
-  return (
-    <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="inline-block max-w-lg text-center justify-center">
-          <h1 className={title()}>Make&nbsp;</h1>
-          <h1 className={title({ color: "violet" })}>beautiful&nbsp;</h1>
-          <br />
-          <h1 className={title()}>
-            websites regardless of your design experience.
-          </h1>
-          <h4 className={subtitle({ class: "mt-4" })}>
-            Beautiful, fast and modern React UI library.
-          </h4>
-        </div>
+  const navigate = useNavigate();
+  const { data: info, isLoading: loading } = useQuery({
+    queryKey: ["getInfo"],
+    queryFn: async () => {
+      try {
+        return await authClient.me({});
+      } catch (error) {
+        const err = ConnectError.from(error);
+        if (err.code === 16) {
+          navigate("/login");
+        }
+      }
+    },
+  });
 
-        <div className="flex gap-3">
-          <Link
-            isExternal
-            className={buttonStyles({
-              color: "primary",
-              radius: "full",
-              variant: "shadow",
-            })}
-            href={siteConfig.links.docs}
-          >
-            Documentation
-          </Link>
-          <Link
+  //   const handleGetInfo = () => {
+  //     alert(info?.info?.email);
+  //   };
+
+  return (
+    <DefaultLayout loading={loading}>
+      {!loading && (
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+          <div className="inline-block max-w-lg text-center justify-center">
+            <h1 className={title()}>Bắt đầu label</h1>
+            <h4 className={subtitle({ class: "mt-4" })}>
+              Hello there! {info?.info?.displayName}
+            </h4>
+          </div>
+
+          <div className="flex gap-3">
+            <Button color="primary" onClick={() => navigate("/label")}>
+              Bắt đầu
+            </Button>
+            {/* <Link
             isExternal
             className={buttonStyles({ variant: "bordered", radius: "full" })}
             href={siteConfig.links.github}
           >
             <GithubIcon size={20} />
             GitHub
-          </Link>
-        </div>
+          </Link> */}
+          </div>
 
-        <div className="mt-8">
-          <Snippet hideCopyButton hideSymbol variant="bordered">
-            <span>
-              Get started by editing{" "}
-              <Code color="primary">pages/index.tsx</Code>
-            </span>
-          </Snippet>
-        </div>
-      </section>
+          <div className="mt-8">
+            <Snippet hideCopyButton hideSymbol variant="bordered">
+              <span>
+                Get started by editing{" "}
+                <Code color="primary">pages/index.tsx</Code>
+              </span>
+            </Snippet>
+          </div>
+        </section>
+      )}
     </DefaultLayout>
   );
 }

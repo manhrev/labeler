@@ -10,6 +10,7 @@ import { MeRequest, MeResponse } from "./rpc/me_pb.js";
 import { GetImageToLabelRequest, GetImageToLabelResponse } from "./rpc/get_image_to_label_pb.js";
 import { UpdateImageAfterLabeledRequest, UpdateImageAfterLabeledResponse } from "./rpc/update_image_after_labeled_pb.js";
 import { RollbackLabeledImageRequest, RollbackLabeledImageResponse } from "./rpc/rollback_labeled_image_pb.js";
+import { GetMyLabeledImageRequest, GetMyLabeledImageResponse } from "./rpc/get_my_labeled_image_pb.js";
 
 /**
  * @generated from service auth.AuthService
@@ -69,6 +70,15 @@ export const AuthService = {
       name: "RollbackLabeledImage",
       I: RollbackLabeledImageRequest,
       O: RollbackLabeledImageResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc auth.AuthService.GetMyLabeledImage
+     */
+    getMyLabeledImage: {
+      name: "GetMyLabeledImage",
+      I: GetMyLabeledImageRequest,
+      O: GetMyLabeledImageResponse,
       kind: MethodKind.Unary,
     },
   }
