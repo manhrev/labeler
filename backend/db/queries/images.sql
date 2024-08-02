@@ -1,6 +1,6 @@
 -- name: GetImageToLabel :one
 SELECT * FROM images
-WHERE url_selected IS NULL AND labeler_id IS NULL LIMIT 1;
+WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) LIMIT 1;
 
 -- name: GetImageByID :one
 SELECT * FROM images

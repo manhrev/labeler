@@ -19,7 +19,10 @@ import (
 func (s *Server) GetImageToLabel(
 	ctx context.Context, in *connect.Request[rpc.GetImageToLabelRequest],
 ) (*connect.Response[rpc.GetImageToLabelResponse], error) {
-	image, err := s.repo.Queries.GetImageToLabel(ctx)
+	image, err := s.repo.Queries.GetImageToLabel(ctx, pgtype.Int8{
+		Int64: util.MustParseInt64(in.Header().Get(header.UserID)),
+		Valid: true,
+	})
 	if err != nil {
 		// s.logger.Errorf("Cannot query image or image not found: %v", err)
 		if errors.Is(err, pgx.ErrNoRows) {
