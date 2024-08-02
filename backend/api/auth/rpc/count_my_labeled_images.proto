@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package rpc;
+
+option go_package = "github.com/manhrev/labeler/pkg/api/go/auth/rpc;rpc";
+
+message CountMyLabeledImagesRequest {}
+
+message CountMyLabeledImagesResponse {
+  int64 count = 1;
+}

@@ -11,6 +11,18 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const countImagesByLabelerID = `-- name: CountImagesByLabelerID :one
+SELECT COUNT(*) FROM images
+WHERE labeler_id = $1
+`
+
+func (q *Queries) CountImagesByLabelerID(ctx context.Context, labelerID pgtype.Int8) (int64, error) {
+	row := q.db.QueryRow(ctx, countImagesByLabelerID, labelerID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const getImageByID = `-- name: GetImageByID :one
 SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
 WHERE id = $1 AND category = $2 

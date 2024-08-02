@@ -38,3 +38,7 @@ UPDATE images
     labeler_id = $3,
     updated_at = now()
 WHERE id = $1 AND category = $2;
+
+-- name: CountImagesByLabelerID :one
+SELECT COUNT(*) FROM images
+WHERE labeler_id = $1;
