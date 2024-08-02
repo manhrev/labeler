@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -21,7 +22,7 @@ func (s *Server) GetImageToLabel(
 	image, err := s.repo.Queries.GetImageToLabel(ctx)
 	if err != nil {
 		// s.logger.Errorf("Cannot query image or image not found: %v", err)
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("no image to label: %v", err))
 		}
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("cannot query image: %v", err))
