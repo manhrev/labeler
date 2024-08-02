@@ -67,7 +67,27 @@ func (q *Queries) GetImageToLabel(ctx context.Context) (Image, error) {
 	return i, err
 }
 
-const updateImageAfterLabeled = `-- name: UpdateImageAfterLabeled :one
+const rollbackImageLabeled = `-- name: RollbackImageLabeled :exec
+UPDATE images
+  set 
+    url_selected = NULL,
+    updated_at = now(),
+    background_type = NULL
+WHERE id = $1 AND category = $2 AND labeler_id = $3
+`
+
+type RollbackImageLabeledParams struct {
+	ID        int64
+	Category  Category
+	LabelerID pgtype.Int8
+}
+
+func (q *Queries) RollbackImageLabeled(ctx context.Context, arg RollbackImageLabeledParams) error {
+	_, err := q.db.Exec(ctx, rollbackImageLabeled, arg.ID, arg.Category, arg.LabelerID)
+	return err
+}
+
+const updateImageAfterLabeled = `-- name: UpdateImageAfterLabeled :exec
 UPDATE images
   set 
     url_selected = $3,
@@ -75,7 +95,6 @@ UPDATE images
     background_type = $5,
     updated_at = now()
 WHERE id = $1 AND category = $2
-RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
 type UpdateImageAfterLabeledParams struct {
@@ -86,39 +105,23 @@ type UpdateImageAfterLabeledParams struct {
 	BackgroundType NullBackgroundType
 }
 
-func (q *Queries) UpdateImageAfterLabeled(ctx context.Context, arg UpdateImageAfterLabeledParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageAfterLabeled,
+func (q *Queries) UpdateImageAfterLabeled(ctx context.Context, arg UpdateImageAfterLabeledParams) error {
+	_, err := q.db.Exec(ctx, updateImageAfterLabeled,
 		arg.ID,
 		arg.Category,
 		arg.UrlSelected,
 		arg.LabelerID,
 		arg.BackgroundType,
 	)
-	var i Image
-	err := row.Scan(
-		&i.ID,
-		&i.Category,
-		&i.BackgroundType,
-		&i.LabelerID,
-		&i.Name,
-		&i.DisplayName,
-		&i.Url1,
-		&i.Url2,
-		&i.Url3,
-		&i.UrlSelected,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+	return err
 }
 
-const updateImageLabelerID = `-- name: UpdateImageLabelerID :one
+const updateImageLabelerID = `-- name: UpdateImageLabelerID :exec
 UPDATE images
   set 
     labeler_id = $3,
     updated_at = now()
 WHERE id = $1 AND category = $2
-RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
 type UpdateImageLabelerIDParams struct {
@@ -127,33 +130,17 @@ type UpdateImageLabelerIDParams struct {
 	LabelerID pgtype.Int8
 }
 
-func (q *Queries) UpdateImageLabelerID(ctx context.Context, arg UpdateImageLabelerIDParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageLabelerID, arg.ID, arg.Category, arg.LabelerID)
-	var i Image
-	err := row.Scan(
-		&i.ID,
-		&i.Category,
-		&i.BackgroundType,
-		&i.LabelerID,
-		&i.Name,
-		&i.DisplayName,
-		&i.Url1,
-		&i.Url2,
-		&i.Url3,
-		&i.UrlSelected,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+func (q *Queries) UpdateImageLabelerID(ctx context.Context, arg UpdateImageLabelerIDParams) error {
+	_, err := q.db.Exec(ctx, updateImageLabelerID, arg.ID, arg.Category, arg.LabelerID)
+	return err
 }
 
-const updateImageUrlSelectedByLabelerID = `-- name: UpdateImageUrlSelectedByLabelerID :one
+const updateImageUrlSelectedByLabelerID = `-- name: UpdateImageUrlSelectedByLabelerID :exec
 UPDATE images
   set 
     url_selected = $4,
     updated_at = now()
 WHERE id = $1 AND category = $2 AND labeler_id = $3
-RETURNING id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at
 `
 
 type UpdateImageUrlSelectedByLabelerIDParams struct {
@@ -163,27 +150,12 @@ type UpdateImageUrlSelectedByLabelerIDParams struct {
 	UrlSelected pgtype.Int2
 }
 
-func (q *Queries) UpdateImageUrlSelectedByLabelerID(ctx context.Context, arg UpdateImageUrlSelectedByLabelerIDParams) (Image, error) {
-	row := q.db.QueryRow(ctx, updateImageUrlSelectedByLabelerID,
+func (q *Queries) UpdateImageUrlSelectedByLabelerID(ctx context.Context, arg UpdateImageUrlSelectedByLabelerIDParams) error {
+	_, err := q.db.Exec(ctx, updateImageUrlSelectedByLabelerID,
 		arg.ID,
 		arg.Category,
 		arg.LabelerID,
 		arg.UrlSelected,
 	)
-	var i Image
-	err := row.Scan(
-		&i.ID,
-		&i.Category,
-		&i.BackgroundType,
-		&i.LabelerID,
-		&i.Name,
-		&i.DisplayName,
-		&i.Url1,
-		&i.Url2,
-		&i.Url3,
-		&i.UrlSelected,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+	return err
 }

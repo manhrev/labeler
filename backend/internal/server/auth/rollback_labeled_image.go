@@ -15,12 +15,12 @@ import (
 func (s *Server) RollbackLabeledImage(
 	ctx context.Context, in *connect.Request[rpc.RollbackLabeledImageRequest],
 ) (*connect.Response[rpc.RollbackLabeledImageResponse], error) {
-	_, err := s.repo.Queries.UpdateImageUrlSelectedByLabelerID(ctx, db.UpdateImageUrlSelectedByLabelerIDParams{
-		ID:          util.MustParseInt64(in.Msg.GetId()),
-		Category:    db.Category(in.Msg.GetCategory().String()),
-		UrlSelected: pgtype.Int2{Valid: false},
-		LabelerID:   pgtype.Int8{Int64: util.MustParseInt64(in.Header().Get(header.UserID)), Valid: true},
+	err := s.repo.Queries.RollbackImageLabeled(ctx, db.RollbackImageLabeledParams{
+		ID:        util.MustParseInt64(in.Msg.GetId()),
+		Category:  db.Category(in.Msg.GetCategory().String()),
+		LabelerID: pgtype.Int8{Int64: util.MustParseInt64(in.Header().Get(header.UserID)), Valid: true},
 	})
+
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("cannot rollback image  due to: %v", err))
 	}

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/manhrev/labeler/internal/repository/user"
 	"github.com/manhrev/labeler/pkg/db"
 )
@@ -9,10 +9,10 @@ import (
 type Repository struct {
 	Queries *db.Queries
 	User    *user.Repository
-	DB      *pgx.Conn
+	DB      *pgxpool.Pool
 }
 
-func New(queries *db.Queries, db *pgx.Conn) *Repository {
+func New(queries *db.Queries, db *pgxpool.Pool) *Repository {
 	return &Repository{
 		Queries: queries,
 		User:    user.NewRepository(queries),

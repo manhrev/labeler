@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/tracelog"
+
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 	"golang.org/x/net/http2"
@@ -14,6 +16,7 @@ import (
 
 	"connectrpc.com/connect"
 	"connectrpc.com/grpcreflect"
+	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/manhrev/labeler/configs"
 	"github.com/manhrev/labeler/internal/repository"
 	"github.com/manhrev/labeler/internal/server/auth"
@@ -22,6 +25,20 @@ import (
 	"github.com/manhrev/labeler/pkg/api/go/auth/authconnect"
 	"github.com/manhrev/labeler/pkg/db"
 )
+
+type Logger struct {
+	logger *zap.SugaredLogger
+}
+
+func NewLogger(logger *zap.SugaredLogger) *Logger {
+	return &Logger{
+		logger: logger,
+	}
+}
+
+func (l *Logger) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
+	l.logger.Info(msg, data)
+}
 
 func main() {
 	var (
@@ -46,14 +63,22 @@ func main() {
 	logger := zapLogger.Sugar()
 
 	// init db connection
-	conn, err := pgx.Connect(ctx, fmt.Sprintf(
+	poolConfig, err := pgxpool.ParseConfig(fmt.Sprintf(
 		"host=%s port=%s user=%s dbname=%s password=%s %s",
 		dbCfg.DBDomain, dbCfg.DBPort, dbCfg.DBUsername, dbCfg.DBName, dbCfg.DBPassword, dbCfg.DBSSLMode,
 	))
 	if err != nil {
+		log.Fatalf("Unable to parse pool config: %v\n", err)
+	}
+	poolConfig.ConnConfig.Tracer = &tracelog.TraceLog{
+		Logger: pgxzap.NewLogger(zapLogger),
+		// LogLevel: tracelog.LogLevelInfo,
+	}
+	conn, err := pgxpool.NewWithConfig(ctx, poolConfig)
+	if err != nil {
 		logger.Fatalf("failed to connect: %v", err)
 	}
-	defer conn.Close(ctx)
+	defer conn.Close()
 
 	// init queries
 	queries := db.New(conn)

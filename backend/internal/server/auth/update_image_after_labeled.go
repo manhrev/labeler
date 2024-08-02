@@ -16,7 +16,7 @@ func (s *Server) UpdateImageAfterLabeled(
 	ctx context.Context, in *connect.Request[rpc.UpdateImageAfterLabeledRequest],
 ) (*connect.Response[rpc.UpdateImageAfterLabeledResponse], error) {
 
-	_, err := s.repo.Queries.UpdateImageAfterLabeled(ctx, db.UpdateImageAfterLabeledParams{
+	err := s.repo.Queries.UpdateImageAfterLabeled(ctx, db.UpdateImageAfterLabeledParams{
 		ID:       util.MustParseInt64(in.Msg.GetId()),
 		Category: db.Category(in.Msg.GetCategory().String()),
 		UrlSelected: pgtype.Int2{

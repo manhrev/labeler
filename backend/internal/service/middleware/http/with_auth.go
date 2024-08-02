@@ -50,14 +50,17 @@ func (s Service) WithAuth(h http.Handler) http.Handler {
 			return
 		}
 
-		_, err = s.userRepo.GetUserByID(r.Context(), int64(userID))
-		if err != nil {
-			s.logger.Errorf("User not found : %v", err)
-			connectErr := connect.NewError(connect.CodeInternal, errors.New("cannot query user or user not active"))
-			if err = errWritter.Write(w, r, connectErr); err != nil {
-				s.logger.Errorf("Cannot write error when user not found")
+		if _, ok := s.userMap[int64(userID)]; !ok {
+			user, err := s.userRepo.GetUserByID(r.Context(), int64(userID))
+			if err != nil {
+				s.logger.Errorf("User not found : %v", err)
+				connectErr := connect.NewError(connect.CodeInternal, errors.New("cannot query user or user not active"))
+				if err = errWritter.Write(w, r, connectErr); err != nil {
+					s.logger.Errorf("Cannot write error when user not found")
+				}
+				return
 			}
-			return
+			s.userMap[int64(userID)] = user
 		}
 
 		r.Header.Add(header.UserID, userIDStr)

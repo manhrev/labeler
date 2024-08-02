@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/manhrev/labeler/internal/const/header"
 	"github.com/manhrev/labeler/internal/model/auth"
@@ -19,10 +20,14 @@ func (s *Server) GetImageToLabel(
 ) (*connect.Response[rpc.GetImageToLabelResponse], error) {
 	image, err := s.repo.Queries.GetImageToLabel(ctx)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("cannot query image or image not found: %v", err))
+		// s.logger.Errorf("Cannot query image or image not found: %v", err)
+		if err == pgx.ErrNoRows {
+			return nil, connect.NewError(connect.CodeNotFound, fmt.Errorf("no image to label: %v", err))
+		}
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("cannot query image: %v", err))
 	}
 
-	if _, err := s.repo.Queries.UpdateImageLabelerID(ctx, db.UpdateImageLabelerIDParams{
+	if err = s.repo.Queries.UpdateImageLabelerID(ctx, db.UpdateImageLabelerIDParams{
 		ID:       image.ID,
 		Category: image.Category,
 		LabelerID: pgtype.Int8{
