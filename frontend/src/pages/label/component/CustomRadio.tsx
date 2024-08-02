@@ -4,7 +4,6 @@ export const CustomRadio = (props: RadioProps) => {
   const {
     Component,
     children,
-    isSelected,
     description,
     getBaseProps,
     getWrapperProps,
@@ -29,8 +28,15 @@ export const CustomRadio = (props: RadioProps) => {
       <span {...getWrapperProps()}>
         <span {...getControlProps()} />
       </span>
-      <div {...getLabelWrapperProps()} className="flex justify-center flex-col">
-        {children && <span {...getLabelProps()}>{children}</span>}
+      <div
+        {...getLabelWrapperProps()}
+        className="flex justify-center flex-col w-full h-full"
+      >
+        {children && (
+          <span {...getLabelProps()} className="w-full h-full block">
+            {children}
+          </span>
+        )}
         {description && (
           <span className="text-md font-semibold text-foreground opacity-70 text-center">
             {description}

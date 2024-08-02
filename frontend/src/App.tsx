@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster position="bottom-center" />
+      <Toaster position="bottom-right" />
       <Routes>
         <Route element={<IndexPage />} path="/" />
         <Route element={<DocsPage />} path="/docs" />

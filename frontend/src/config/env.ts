@@ -1,6 +1,6 @@
 const env = import.meta.env.PROD ? "prod" : "local";
 
-const BaseDomainProduction = "https://labeler-enbwmscxnq-as.a.run.app";
+const BaseDomainProduction = "labeler-enbwmscxnq-as.a.run.app";
 
 export const EnvNameConfig = {
   LOCAL: "local",

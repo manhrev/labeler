@@ -2,7 +2,7 @@ import DefaultLayout from "@/layouts/default";
 import { Button, Image, RadioGroup } from "@nextui-org/react";
 import { CustomRadio } from "./component/CustomRadio";
 import { Controller, useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@/service/auth";
 import { toast } from "react-hot-toast";
 import {
@@ -11,10 +11,10 @@ import {
 } from "@/lib/api/auth/model/image_pb";
 import { UpdateImageAfterLabeledRequest } from "@/lib/api/auth/rpc/update_image_after_labeled_pb";
 import { PartialMessage } from "@bufbuild/protobuf";
-import { RollbackLabeledImageRequest } from "@/lib/api/auth/rpc/rollback_labeled_image_pb";
 import { ConnectError } from "@connectrpc/connect";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { GetMyLabeledImageRequest } from "@/lib/api/auth/rpc/get_my_labeled_image_pb";
 
 type LabelFields = {
   imageNumber: string;
@@ -32,11 +32,23 @@ export default function LabelPage() {
     defaultValues: { imageNumber: "", backgroundType: "" },
     mode: "onChange",
   });
-  const [hasPrevious, setHasPrevious] = React.useState(false);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [images, setImages] = React.useState<ImagePb[]>([]);
+  const [canPrevious, setCanPrevious] = React.useState(false);
 
-  const { mutateAsync: updateImageMutate, isPending: mutateLoading } =
+  React.useEffect(() => {
+    console.debug(images);
+  }, [images]);
+
+  const { mutateAsync: getMyImageMutate, isPending: getMyImageLoading } =
+    useMutation({
+      mutationFn: async (request: PartialMessage<GetMyLabeledImageRequest>) => {
+        const { image } = await authClient.getMyLabeledImage(request);
+        return image;
+      },
+    });
+
+  const { mutateAsync: updateImageMutate, isPending: updateLoading } =
     useMutation({
       mutationFn: async (
         request: PartialMessage<UpdateImageAfterLabeledRequest>
@@ -45,37 +57,35 @@ export default function LabelPage() {
       },
     });
 
-  const { data: image, isFetching: queryLoading } = useQuery({
-    queryKey: ["getImageToLabel"],
-    queryFn: async () => {
-      try {
-        const { image } = await authClient.getImageToLabel({});
-        return image;
-      } catch (error) {
-        const err = ConnectError.from(error);
-        console.log(err.code);
-        if (err.code === 5) {
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-          toast.success("No image to label");
-        } else toast.error("Get image failed, please try again");
-      }
-    },
-  });
-
-  const { mutateAsync: rollbackImageMutate, isPending: rollbackLoading } =
+  const { mutateAsync: getImageToLabelMutate, isPending: getImageLoading } =
     useMutation({
-      mutationFn: async (
-        request: PartialMessage<RollbackLabeledImageRequest>
-      ) => {
-        await authClient.rollbackLabeledImage(request);
+      mutationFn: async () => {
+        try {
+          const { image } = await authClient.getImageToLabel({});
+          return image;
+        } catch (error) {
+          const err = ConnectError.from(error);
+          console.log(err.code);
+          if (err.code === 5) {
+            toast.success("No image to label");
+            setTimeout(() => {
+              navigate("/");
+            }, 1000);
+          } else throw error;
+        }
       },
     });
 
-  const loading = queryLoading || mutateLoading;
+  //   const { mutateAsync: getMyLabeledImageMutate, isPending: rollbackLoading } =
+  //     useMutation({
+  //       mutationFn: async (request: PartialMessage<GetMyLabeledImageRequest>) => {
+  //         await authClient.getMyLabeledImage(request);
+  //       },
+  //     });
+
+  const loading = getMyImageLoading || getImageLoading || updateLoading;
   const { category, displayName, id, url1, url2, url3 } =
-    image ?? new ImagePb();
+    images?.[images.length - 1] ?? new ImagePb();
 
   const handleNext = async (data: LabelFields) => {
     try {
@@ -85,10 +95,13 @@ export default function LabelPage() {
         category: category,
         urlSelected: data.imageNumber,
       });
-      toast.success("Update image success");
-      queryClient.invalidateQueries({ queryKey: ["getImageToLabel"] });
+
+      fetchImage();
+
       reset();
-      setHasPrevious(true);
+      setCanPrevious(true);
+
+      toast.success("Update image success");
     } catch {
       toast.error("Update image failed");
     }
@@ -102,8 +115,11 @@ export default function LabelPage() {
         category: category,
         urlSelected: "0",
       });
+
+      fetchImage();
+      setCanPrevious(true);
       toast.success("Image discarded");
-      queryClient.invalidateQueries({ queryKey: ["getImageToLabel"] });
+
       reset();
     } catch {
       toast.error("Discard image failed");
@@ -112,16 +128,26 @@ export default function LabelPage() {
 
   const handlePrevious = async () => {
     try {
-      await rollbackImageMutate({
-        category: category,
-        id: id.toString(),
+      const image = await getMyImageMutate({
+        category: images[images.length - 2].category,
+        id: images[images.length - 2].id.toString(),
       });
-      setHasPrevious(false);
-      toast.success("Rollback previous image success");
+      setImages((prev) => [...prev.slice(0, -2), image ?? new ImagePb()]);
+      reset();
     } catch {
-      toast.error("Get previous image failed");
+    } finally {
+      setCanPrevious(false);
     }
   };
+
+  const fetchImage = async () => {
+    const image = await getImageToLabelMutate();
+    setImages((prev) => [...prev, image ?? new ImagePb()]);
+  };
+
+  React.useEffect(() => {
+    fetchImage();
+  }, []);
 
   return (
     <DefaultLayout loading={loading}>
@@ -134,7 +160,7 @@ export default function LabelPage() {
           <div className="md:h-[60vh] h-[50vh] w-full flex flex-col gap-8 items-center">
             {!loading && (
               <>
-                <div>
+                <div className="w-full">
                   <RadioGroup
                     label={
                       <div className="text-center box w-full">Chọn hình</div>
@@ -144,59 +170,35 @@ export default function LabelPage() {
                     isInvalid={!!errors.imageNumber}
                     errorMessage={errors.imageNumber?.message}
                   >
-                    <div className="grid grid-cols-3 gap-4 ">
-                      <Controller
-                        rules={{ required: "This is required" }}
-                        control={control}
-                        name="imageNumber"
-                        render={({ field: { onChange } }) => (
-                          <CustomRadio
-                            value="1"
-                            description="Hình 1"
-                            onChange={onChange}
+                    <div className="flex justify-center w-full">
+                      <div className="grid grid-cols-3 gap-4 w-full justify-center max-w-[800px] justify-self-center">
+                        {[url1, url2, url3].map((url, index) => (
+                          <div
+                            className="flex justify-center w-full"
+                            key={index}
                           >
-                            <Image
-                              alt="NextUI hero Image"
-                              src={url1}
-                              fallbackSrc="https://placehold.co/400"
+                            <Controller
+                              rules={{ required: "This is required" }}
+                              control={control}
+                              name="imageNumber"
+                              render={({ field: { onChange } }) => (
+                                <CustomRadio
+                                  value={(index + 1).toString()}
+                                  description={"Hình " + (index + 1)}
+                                  onChange={onChange}
+                                >
+                                  <Image
+                                    className="min-w-[110px] sm:min-w-[170px] md:min-w-[230px]"
+                                    alt="NextUI hero Image"
+                                    src={url}
+                                    fallbackSrc="https://placehold.co/400"
+                                  />
+                                </CustomRadio>
+                              )}
                             />
-                          </CustomRadio>
-                        )}
-                      />
-                      <Controller
-                        control={control}
-                        name="imageNumber"
-                        render={({ field: { onChange } }) => (
-                          <CustomRadio
-                            value="2"
-                            description="Hình 2"
-                            onChange={onChange}
-                          >
-                            <Image
-                              alt="NextUI hero Image"
-                              src={url2}
-                              fallbackSrc="https://placehold.co/400"
-                            />
-                          </CustomRadio>
-                        )}
-                      />
-                      <Controller
-                        control={control}
-                        name="imageNumber"
-                        render={({ field: { onChange } }) => (
-                          <CustomRadio
-                            value="3"
-                            description="Hình 3"
-                            onChange={onChange}
-                          >
-                            <Image
-                              alt="NextUI hero Image"
-                              src={url3}
-                              fallbackSrc="https://placehold.co/400"
-                            />
-                          </CustomRadio>
-                        )}
-                      />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </RadioGroup>
                 </div>
@@ -243,17 +245,17 @@ export default function LabelPage() {
               color="danger"
               size="lg"
               onClick={handleDiscard}
-              isDisabled={mutateLoading}
+              isDisabled={updateLoading}
             >
-              Bỏ
+              Bỏ, lấy hình mới
             </Button>
             <Button
               size="lg"
               onClick={handlePrevious}
-              isLoading={rollbackLoading}
-              isDisabled={!hasPrevious}
+              //   isLoading={rollbackLoading}
+              isDisabled={images.length < 2 || !canPrevious}
             >
-              Huỷ ảnh trước
+              Trước
             </Button>
             <Button
               size="lg"
@@ -262,7 +264,7 @@ export default function LabelPage() {
               isDisabled={!isDirty}
               //   disabled={!isDirty}
             >
-              Tiếp
+              Ok, Lấy hình mới
             </Button>
           </div>
         </div>
