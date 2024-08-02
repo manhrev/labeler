@@ -44,7 +44,7 @@ func (q *Queries) GetImageByID(ctx context.Context, arg GetImageByIDParams) (Ima
 
 const getImageToLabel = `-- name: GetImageToLabel :one
 SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
-WHERE url_selected IS NULL LIMIT 1
+WHERE url_selected IS NULL AND labeler_id IS NULL LIMIT 1
 `
 
 func (q *Queries) GetImageToLabel(ctx context.Context) (Image, error) {
