@@ -1,5 +1,5 @@
 import DefaultLayout from "@/layouts/default";
-import { Button, Image, RadioGroup } from "@nextui-org/react";
+import { Button, Image, RadioGroup, Link } from "@nextui-org/react";
 import { CustomRadio } from "./component/CustomRadio";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import { authClient } from "@/service/auth";
 import { toast } from "react-hot-toast";
 import {
   BackgroundType,
+  Category,
   Image as ImagePb,
 } from "@/lib/api/auth/model/image_pb";
 import { UpdateImageAfterLabeledRequest } from "@/lib/api/auth/rpc/update_image_after_labeled_pb";
@@ -86,6 +87,20 @@ export default function LabelPage() {
   const loading = getMyImageLoading || getImageLoading || updateLoading;
   const { category, displayName, id, url1, url2, url3 } =
     images?.[images.length - 1] ?? new ImagePb();
+  const categoryStr = (() => {
+    switch (category) {
+      case Category.C_BASKETBALL_COMPETITION:
+        return "Giải bóng rổ";
+      case Category.C_BASKETBALL_COMPETITOR:
+        return "Đội bóng rổ";
+      case Category.C_FOOTBALL_COMPETITION:
+        return "Giải bóng đá";
+      case Category.C_FOOTBALL_COMPETITOR:
+        return "Đội bóng đá";
+      case Category.C_NONE:
+        return "Không xác định";
+    }
+  })();
 
   const handleNext = async (data: LabelFields) => {
     try {
@@ -153,9 +168,22 @@ export default function LabelPage() {
     <DefaultLayout loading={loading}>
       <form>
         <div className="flex items-center flex-col gap-8">
-          <h1 className="text-xl font-semibold">
-            Hình {displayName}-{id.toString()}
-          </h1>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-4 items-center">
+              <h1 className="text-xl font-semibold">{displayName}</h1>
+              <Link
+                href={`https://www.google.com/search?tbm=isch&q=${displayName}`}
+                target="_blank"
+                size="sm"
+                className="text-md font-semibold"
+              >
+                Tìm kiếm
+              </Link>
+            </div>
+            <span>
+              Loại: {categoryStr} - ID: {id.toString()}
+            </span>
+          </div>
 
           <div className="md:h-[60vh] h-[50vh] min-h-[450px] w-full flex flex-col gap-8 items-center">
             {!loading && (
@@ -184,13 +212,17 @@ export default function LabelPage() {
                               render={({ field: { onChange } }) => (
                                 <CustomRadio
                                   value={(index + 1).toString()}
-                                  description={"Hình " + (index + 1)}
+                                  description={
+                                    "Hình " +
+                                    (index + 1) +
+                                    ` (${url.split(".")?.pop()})`
+                                  }
                                   onChange={onChange}
                                   className="bg-[url('/transparent-grid.svg')] border"
                                 >
                                   <div className="flex overflowo-hidden">
                                     <Image
-                                      className="min-w-[110px] sm:min-w-[170px] md:min-w-[230px]"
+                                      className="min-w-[110px] sm:min-w-[170px] md:min-w-[230px] max-h-[340px]"
                                       alt="NextUI hero Image"
                                       src={url}
                                       fallbackSrc="https://placehold.co/400"

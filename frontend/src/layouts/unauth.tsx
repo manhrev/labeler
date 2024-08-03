@@ -45,7 +45,7 @@ export default function UnauthenticatedLayout({
           href="https://github.com/manhrev"
           title="nextui.org homepage"
         >
-          <span className="text-default-600">Done by</span>
+          <span className="text-default-600">Made by</span>
           <p className="text-primary">manhrev</p>
         </Link>
       </footer>
