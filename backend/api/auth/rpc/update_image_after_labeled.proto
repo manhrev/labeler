@@ -14,10 +14,7 @@ message UpdateImageAfterLabeledRequest {
     }];
     string id = 2 [(validate.rules).string = {min_len: 1}];
     string url_selected = 3 [(validate.rules).string = {min_len: 1}];
-    model.BackgroundType background_type = 4 [(validate.rules).enum = {
-        defined_only: true,
-        not_in: [0]
-    }];
+    model.BackgroundType background_type = 4;
 }
 
 message UpdateImageAfterLabeledResponse {}

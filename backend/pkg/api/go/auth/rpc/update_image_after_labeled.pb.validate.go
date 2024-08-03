@@ -105,27 +105,7 @@ func (m *UpdateImageAfterLabeledRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _UpdateImageAfterLabeledRequest_BackgroundType_NotInLookup[m.GetBackgroundType()]; ok {
-		err := UpdateImageAfterLabeledRequestValidationError{
-			field:  "BackgroundType",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := model.BackgroundType_name[int32(m.GetBackgroundType())]; !ok {
-		err := UpdateImageAfterLabeledRequestValidationError{
-			field:  "BackgroundType",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for BackgroundType
 
 	if len(errors) > 0 {
 		return UpdateImageAfterLabeledRequestMultiError(errors)
@@ -209,10 +189,6 @@ var _ interface {
 } = UpdateImageAfterLabeledRequestValidationError{}
 
 var _UpdateImageAfterLabeledRequest_Category_NotInLookup = map[model.Category]struct{}{
-	0: {},
-}
-
-var _UpdateImageAfterLabeledRequest_BackgroundType_NotInLookup = map[model.BackgroundType]struct{}{
 	0: {},
 }
 

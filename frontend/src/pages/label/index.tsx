@@ -186,13 +186,16 @@ export default function LabelPage() {
                                   value={(index + 1).toString()}
                                   description={"Hình " + (index + 1)}
                                   onChange={onChange}
+                                  className="bg-[url('/transparent-grid.svg')] border"
                                 >
-                                  <Image
-                                    className="min-w-[110px] sm:min-w-[170px] md:min-w-[230px]"
-                                    alt="NextUI hero Image"
-                                    src={url}
-                                    fallbackSrc="https://placehold.co/400"
-                                  />
+                                  <div className="flex overflowo-hidden">
+                                    <Image
+                                      className="min-w-[110px] sm:min-w-[170px] md:min-w-[230px]"
+                                      alt="NextUI hero Image"
+                                      src={url}
+                                      fallbackSrc="https://placehold.co/400"
+                                    />
+                                  </div>
                                 </CustomRadio>
                               )}
                             />
@@ -210,31 +213,41 @@ export default function LabelPage() {
                   isInvalid={!!errors.backgroundType}
                   errorMessage={errors.backgroundType?.message}
                 >
-                  <div className="grid grid-cols-2 gap-4 max-w-[600px]">
-                    <Controller
-                      rules={{ required: "This is required" }}
-                      control={control}
-                      name="backgroundType"
-                      render={({ field: { onChange } }) => (
-                        <CustomRadio
-                          description="Nền bên trong"
-                          value="1"
-                          onChange={onChange}
-                        ></CustomRadio>
-                      )}
-                    />
-                    <Controller
-                      rules={{ required: "This is required" }}
-                      control={control}
-                      name="backgroundType"
-                      render={({ field: { onChange } }) => (
-                        <CustomRadio
-                          description="Nền toàn bộ"
-                          value="2"
-                          onChange={onChange}
-                        ></CustomRadio>
-                      )}
-                    />
+                  <div className="grid grid-cols-3 gap-4 max-w-[600px]">
+                    {[
+                      BackgroundType.BT_NONE,
+                      BackgroundType.BT_OUTSIDE,
+                      BackgroundType.BT_FULL,
+                    ].map((type) => {
+                      const typeStr = type.toString();
+                      let typeName = "";
+                      switch (type) {
+                        case BackgroundType.BT_OUTSIDE:
+                          typeName = "Nền bên ngoài";
+                          break;
+                        case BackgroundType.BT_FULL:
+                          typeName = "Nền toàn bộ";
+                          break;
+                        case BackgroundType.BT_NONE:
+                          typeName = "Trong suốt";
+                          break;
+                      }
+                      return (
+                        <Controller
+                          key={typeStr}
+                          rules={{ required: "This is required" }}
+                          control={control}
+                          name="backgroundType"
+                          render={({ field: { onChange } }) => (
+                            <CustomRadio
+                              description={typeName}
+                              value={typeStr}
+                              onChange={onChange}
+                            ></CustomRadio>
+                          )}
+                        />
+                      );
+                    })}
                   </div>
                 </RadioGroup>
               </>

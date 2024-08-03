@@ -33,7 +33,10 @@ export const CustomRadio = (props: RadioProps) => {
         className="flex justify-center flex-col w-full h-full"
       >
         {children && (
-          <span {...getLabelProps()} className="w-full h-full block">
+          <span
+            {...getLabelProps()}
+            className={cn("w-full h-full flex items-center ", props.className)}
+          >
             {children}
           </span>
         )}

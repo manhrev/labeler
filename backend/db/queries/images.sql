@@ -2,6 +2,13 @@
 SELECT * FROM images
 WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) LIMIT 1;
 
+-- name: UpdateImageLabelerID :exec
+UPDATE images
+  set 
+    labeler_id = $3,
+    updated_at = now()
+WHERE id = $1 AND category = $2;
+
 -- name: GetImageByID :one
 SELECT * FROM images
 WHERE id = $1 AND category = $2 
@@ -30,14 +37,6 @@ UPDATE images
     updated_at = now(),
     background_type = NULL
 WHERE id = $1 AND category = $2 AND labeler_id = $3;
-
-
--- name: UpdateImageLabelerID :exec
-UPDATE images
-  set 
-    labeler_id = $3,
-    updated_at = now()
-WHERE id = $1 AND category = $2;
 
 -- name: CountImagesByLabelerID :one
 SELECT COUNT(*) FROM images
