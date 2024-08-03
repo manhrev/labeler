@@ -2,7 +2,7 @@ import DefaultLayout from "@/layouts/default";
 import { Button, Image, RadioGroup } from "@nextui-org/react";
 import { CustomRadio } from "./component/CustomRadio";
 import { Controller, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { authClient } from "@/service/auth";
 import { toast } from "react-hot-toast";
 import {
@@ -40,6 +40,13 @@ export default function LabelPage() {
     console.debug(images);
   }, [images]);
 
+  const { data: imagesCount } = useQuery({
+    queryKey: ["countMyLabeledImages"],
+    queryFn: async () => {
+      return (await authClient.countMyLabeledImages({})).count;
+    },
+  });
+
   const { mutateAsync: getMyImageMutate, isPending: getMyImageLoading } =
     useMutation({
       mutationFn: async (request: PartialMessage<GetMyLabeledImageRequest>) => {
@@ -75,13 +82,6 @@ export default function LabelPage() {
         }
       },
     });
-
-  //   const { mutateAsync: getMyLabeledImageMutate, isPending: rollbackLoading } =
-  //     useMutation({
-  //       mutationFn: async (request: PartialMessage<GetMyLabeledImageRequest>) => {
-  //         await authClient.getMyLabeledImage(request);
-  //       },
-  //     });
 
   const loading = getMyImageLoading || getImageLoading || updateLoading;
   const { category, displayName, id, url1, url2, url3 } =
@@ -157,7 +157,7 @@ export default function LabelPage() {
             Hình {displayName}-{id.toString()}
           </h1>
 
-          <div className="md:h-[60vh] h-[50vh] w-full flex flex-col gap-8 items-center">
+          <div className="md:h-[60vh] h-[50vh] min-h-[450px] w-full flex flex-col gap-8 items-center">
             {!loading && (
               <>
                 <div className="w-full">
@@ -240,32 +240,40 @@ export default function LabelPage() {
               </>
             )}
           </div>
-          <div className="mt-0 flex gap-3">
-            <Button
-              color="danger"
-              size="lg"
-              onClick={handleDiscard}
-              isDisabled={updateLoading}
-            >
-              Bỏ, lấy hình mới
-            </Button>
-            <Button
-              size="lg"
-              onClick={handlePrevious}
-              //   isLoading={rollbackLoading}
-              isDisabled={images.length < 2 || !canPrevious}
-            >
-              Trước
-            </Button>
-            <Button
-              size="lg"
-              color="primary"
-              onClick={handleSubmit(handleNext)}
-              isDisabled={!isDirty}
-              //   disabled={!isDirty}
-            >
-              Ok, Lấy hình mới
-            </Button>
+          <div>
+            <div className="mt-0 flex gap-3">
+              <Button
+                color="danger"
+                size="lg"
+                onClick={handleDiscard}
+                isDisabled={updateLoading}
+              >
+                Bỏ, lấy hình mới
+              </Button>
+              <Button
+                size="lg"
+                onClick={handlePrevious}
+                //   isLoading={rollbackLoading}
+                isDisabled={images.length < 2 || !canPrevious}
+              >
+                Trước
+              </Button>
+              <Button
+                size="lg"
+                color="primary"
+                onClick={handleSubmit(handleNext)}
+                isDisabled={!isDirty}
+                //   disabled={!isDirty}
+              >
+                Ok, Lấy hình mới
+              </Button>
+            </div>
+            <div className="mt-2">
+              <span className="text-lg">
+                Đã xử lí: {images.length - 1} / Tổng số đã xử lí:{" "}
+                {imagesCount?.toString() ?? 0}
+              </span>
+            </div>
           </div>
         </div>
       </form>

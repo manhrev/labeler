@@ -11,6 +11,7 @@ import { GetImageToLabelRequest, GetImageToLabelResponse } from "./rpc/get_image
 import { UpdateImageAfterLabeledRequest, UpdateImageAfterLabeledResponse } from "./rpc/update_image_after_labeled_pb.js";
 import { RollbackLabeledImageRequest, RollbackLabeledImageResponse } from "./rpc/rollback_labeled_image_pb.js";
 import { GetMyLabeledImageRequest, GetMyLabeledImageResponse } from "./rpc/get_my_labeled_image_pb.js";
+import { CountMyLabeledImagesRequest, CountMyLabeledImagesResponse } from "./rpc/count_my_labeled_images_pb.js";
 
 export const signUp: UnaryHooks<SignUpRequest, SignUpResponse>;
 export const login: UnaryHooks<LoginRequest, LoginResponse>;
@@ -19,3 +20,4 @@ export const getImageToLabel: UnaryHooks<GetImageToLabelRequest, GetImageToLabel
 export const updateImageAfterLabeled: UnaryHooks<UpdateImageAfterLabeledRequest, UpdateImageAfterLabeledResponse>;
 export const rollbackLabeledImage: UnaryHooks<RollbackLabeledImageRequest, RollbackLabeledImageResponse>;
 export const getMyLabeledImage: UnaryHooks<GetMyLabeledImageRequest, GetMyLabeledImageResponse>;
+export const countMyLabeledImages: UnaryHooks<CountMyLabeledImagesRequest, CountMyLabeledImagesResponse>;

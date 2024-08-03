@@ -11,6 +11,7 @@ import { GetImageToLabelRequest, GetImageToLabelResponse } from "./rpc/get_image
 import { UpdateImageAfterLabeledRequest, UpdateImageAfterLabeledResponse } from "./rpc/update_image_after_labeled_pb.js";
 import { RollbackLabeledImageRequest, RollbackLabeledImageResponse } from "./rpc/rollback_labeled_image_pb.js";
 import { GetMyLabeledImageRequest, GetMyLabeledImageResponse } from "./rpc/get_my_labeled_image_pb.js";
+import { CountMyLabeledImagesRequest, CountMyLabeledImagesResponse } from "./rpc/count_my_labeled_images_pb.js";
 
 /**
  * @generated from service auth.AuthService
@@ -79,6 +80,15 @@ export declare const AuthService: {
       readonly name: "GetMyLabeledImage",
       readonly I: typeof GetMyLabeledImageRequest,
       readonly O: typeof GetMyLabeledImageResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc auth.AuthService.CountMyLabeledImages
+     */
+    readonly countMyLabeledImages: {
+      readonly name: "CountMyLabeledImages",
+      readonly I: typeof CountMyLabeledImagesRequest,
+      readonly O: typeof CountMyLabeledImagesResponse,
       readonly kind: MethodKind.Unary,
     },
   }

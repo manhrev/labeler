@@ -12,6 +12,7 @@ import { GetImageToLabelRequest, GetImageToLabelResponse } from "./rpc/get_image
 import { UpdateImageAfterLabeledRequest, UpdateImageAfterLabeledResponse } from "./rpc/update_image_after_labeled_pb.js";
 import { RollbackLabeledImageRequest, RollbackLabeledImageResponse } from "./rpc/rollback_labeled_image_pb.js";
 import { GetMyLabeledImageRequest, GetMyLabeledImageResponse } from "./rpc/get_my_labeled_image_pb.js";
+import { CountMyLabeledImagesRequest, CountMyLabeledImagesResponse } from "./rpc/count_my_labeled_images_pb.js";
 
 export const typeName = "auth.AuthService";
 
@@ -133,3 +134,20 @@ export const getMyLabeledImage = createQueryService({
     typeName: "auth.AuthService",
   },
 }).getMyLabeledImage;
+
+/**
+ * @generated from rpc auth.AuthService.CountMyLabeledImages
+ */
+export const countMyLabeledImages = createQueryService({
+  service: {
+    methods: {
+      countMyLabeledImages: {
+        name: "CountMyLabeledImages",
+        kind: MethodKind.Unary,
+        I: CountMyLabeledImagesRequest,
+        O: CountMyLabeledImagesResponse,
+      },
+    },
+    typeName: "auth.AuthService",
+  },
+}).countMyLabeledImages;

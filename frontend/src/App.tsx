@@ -8,6 +8,7 @@ import AboutPage from "@/pages/about";
 import LoginPage from "./pages/login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LabelPage from "./pages/label";
+import LogoutPage from "./pages/logout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ function App() {
         <Route element={<AboutPage />} path="/about" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<LabelPage />} path="/label" />
+        <Route element={<LogoutPage />} path="/logout" />
       </Routes>
     </QueryClientProvider>
   );

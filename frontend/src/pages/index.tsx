@@ -25,12 +25,15 @@ export default function IndexPage() {
     },
   });
 
-  //   const handleGetInfo = () => {
-  //     alert(info?.info?.email);
-  //   };
+  const { data: imagesCount, isLoading: countLoading } = useQuery({
+    queryKey: ["countMyLabeledImages"],
+    queryFn: async () => {
+      return (await authClient.countMyLabeledImages({})).count;
+    },
+  });
 
   return (
-    <DefaultLayout loading={loading}>
+    <DefaultLayout loading={loading || countLoading}>
       {!loading && (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="inline-block max-w-lg text-center justify-center">
@@ -44,21 +47,13 @@ export default function IndexPage() {
             <Button color="primary" onClick={() => navigate("/label")}>
               Bắt đầu
             </Button>
-            {/* <Link
-            isExternal
-            className={buttonStyles({ variant: "bordered", radius: "full" })}
-            href={siteConfig.links.github}
-          >
-            <GithubIcon size={20} />
-            GitHub
-          </Link> */}
           </div>
 
           <div className="mt-8">
             <Snippet hideCopyButton hideSymbol variant="bordered">
               <span>
-                Bấm "bắt đầu" để chọn lựa ảnh{" "}
-                <Code color="primary">.........</Code>
+                Tổng số ảnh đã label của bạn là{" "}
+                <Code color="primary">{(imagesCount ?? 0).toString()}</Code>
               </span>
             </Snippet>
           </div>
