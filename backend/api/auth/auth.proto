@@ -10,6 +10,7 @@ import "auth/rpc/update_image_after_labeled.proto";
 import "auth/rpc/rollback_labeled_image.proto";
 import "auth/rpc/get_my_labeled_image.proto";
 import "auth/rpc/count_my_labeled_images.proto";
+import "auth/rpc/get_labeled_images.proto";
 
 option go_package = "github.com/manhrev/labeler/pkg/api/go/auth;auth";
 
@@ -23,4 +24,5 @@ service AuthService {
     rpc RollbackLabeledImage(rpc.RollbackLabeledImageRequest) returns (rpc.RollbackLabeledImageResponse) {}
     rpc GetMyLabeledImage(rpc.GetMyLabeledImageRequest) returns (rpc.GetMyLabeledImageResponse) {}
     rpc CountMyLabeledImages(rpc.CountMyLabeledImagesRequest) returns (rpc.CountMyLabeledImagesResponse) {}
+    rpc GetLabeledImages(rpc.GetLabeledImagesRequest) returns (rpc.GetLabeledImagesResponse) {}
 }

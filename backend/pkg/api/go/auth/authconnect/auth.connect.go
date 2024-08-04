@@ -55,6 +55,9 @@ const (
 	// AuthServiceCountMyLabeledImagesProcedure is the fully-qualified name of the AuthService's
 	// CountMyLabeledImages RPC.
 	AuthServiceCountMyLabeledImagesProcedure = "/auth.AuthService/CountMyLabeledImages"
+	// AuthServiceGetLabeledImagesProcedure is the fully-qualified name of the AuthService's
+	// GetLabeledImages RPC.
+	AuthServiceGetLabeledImagesProcedure = "/auth.AuthService/GetLabeledImages"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
@@ -68,6 +71,7 @@ var (
 	authServiceRollbackLabeledImageMethodDescriptor    = authServiceServiceDescriptor.Methods().ByName("RollbackLabeledImage")
 	authServiceGetMyLabeledImageMethodDescriptor       = authServiceServiceDescriptor.Methods().ByName("GetMyLabeledImage")
 	authServiceCountMyLabeledImagesMethodDescriptor    = authServiceServiceDescriptor.Methods().ByName("CountMyLabeledImages")
+	authServiceGetLabeledImagesMethodDescriptor        = authServiceServiceDescriptor.Methods().ByName("GetLabeledImages")
 )
 
 // AuthServiceClient is a client for the auth.AuthService service.
@@ -80,6 +84,7 @@ type AuthServiceClient interface {
 	RollbackLabeledImage(context.Context, *connect.Request[rpc.RollbackLabeledImageRequest]) (*connect.Response[rpc.RollbackLabeledImageResponse], error)
 	GetMyLabeledImage(context.Context, *connect.Request[rpc.GetMyLabeledImageRequest]) (*connect.Response[rpc.GetMyLabeledImageResponse], error)
 	CountMyLabeledImages(context.Context, *connect.Request[rpc.CountMyLabeledImagesRequest]) (*connect.Response[rpc.CountMyLabeledImagesResponse], error)
+	GetLabeledImages(context.Context, *connect.Request[rpc.GetLabeledImagesRequest]) (*connect.Response[rpc.GetLabeledImagesResponse], error)
 }
 
 // NewAuthServiceClient constructs a client for the auth.AuthService service. By default, it uses
@@ -140,6 +145,12 @@ func NewAuthServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(authServiceCountMyLabeledImagesMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		getLabeledImages: connect.NewClient[rpc.GetLabeledImagesRequest, rpc.GetLabeledImagesResponse](
+			httpClient,
+			baseURL+AuthServiceGetLabeledImagesProcedure,
+			connect.WithSchema(authServiceGetLabeledImagesMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -153,6 +164,7 @@ type authServiceClient struct {
 	rollbackLabeledImage    *connect.Client[rpc.RollbackLabeledImageRequest, rpc.RollbackLabeledImageResponse]
 	getMyLabeledImage       *connect.Client[rpc.GetMyLabeledImageRequest, rpc.GetMyLabeledImageResponse]
 	countMyLabeledImages    *connect.Client[rpc.CountMyLabeledImagesRequest, rpc.CountMyLabeledImagesResponse]
+	getLabeledImages        *connect.Client[rpc.GetLabeledImagesRequest, rpc.GetLabeledImagesResponse]
 }
 
 // SignUp calls auth.AuthService.SignUp.
@@ -195,6 +207,11 @@ func (c *authServiceClient) CountMyLabeledImages(ctx context.Context, req *conne
 	return c.countMyLabeledImages.CallUnary(ctx, req)
 }
 
+// GetLabeledImages calls auth.AuthService.GetLabeledImages.
+func (c *authServiceClient) GetLabeledImages(ctx context.Context, req *connect.Request[rpc.GetLabeledImagesRequest]) (*connect.Response[rpc.GetLabeledImagesResponse], error) {
+	return c.getLabeledImages.CallUnary(ctx, req)
+}
+
 // AuthServiceHandler is an implementation of the auth.AuthService service.
 type AuthServiceHandler interface {
 	SignUp(context.Context, *connect.Request[rpc.SignUpRequest]) (*connect.Response[rpc.SignUpResponse], error)
@@ -205,6 +222,7 @@ type AuthServiceHandler interface {
 	RollbackLabeledImage(context.Context, *connect.Request[rpc.RollbackLabeledImageRequest]) (*connect.Response[rpc.RollbackLabeledImageResponse], error)
 	GetMyLabeledImage(context.Context, *connect.Request[rpc.GetMyLabeledImageRequest]) (*connect.Response[rpc.GetMyLabeledImageResponse], error)
 	CountMyLabeledImages(context.Context, *connect.Request[rpc.CountMyLabeledImagesRequest]) (*connect.Response[rpc.CountMyLabeledImagesResponse], error)
+	GetLabeledImages(context.Context, *connect.Request[rpc.GetLabeledImagesRequest]) (*connect.Response[rpc.GetLabeledImagesResponse], error)
 }
 
 // NewAuthServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -261,6 +279,12 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(authServiceCountMyLabeledImagesMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	authServiceGetLabeledImagesHandler := connect.NewUnaryHandler(
+		AuthServiceGetLabeledImagesProcedure,
+		svc.GetLabeledImages,
+		connect.WithSchema(authServiceGetLabeledImagesMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/auth.AuthService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case AuthServiceSignUpProcedure:
@@ -279,6 +303,8 @@ func NewAuthServiceHandler(svc AuthServiceHandler, opts ...connect.HandlerOption
 			authServiceGetMyLabeledImageHandler.ServeHTTP(w, r)
 		case AuthServiceCountMyLabeledImagesProcedure:
 			authServiceCountMyLabeledImagesHandler.ServeHTTP(w, r)
+		case AuthServiceGetLabeledImagesProcedure:
+			authServiceGetLabeledImagesHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -318,4 +344,8 @@ func (UnimplementedAuthServiceHandler) GetMyLabeledImage(context.Context, *conne
 
 func (UnimplementedAuthServiceHandler) CountMyLabeledImages(context.Context, *connect.Request[rpc.CountMyLabeledImagesRequest]) (*connect.Response[rpc.CountMyLabeledImagesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("auth.AuthService.CountMyLabeledImages is not implemented"))
+}
+
+func (UnimplementedAuthServiceHandler) GetLabeledImages(context.Context, *connect.Request[rpc.GetLabeledImagesRequest]) (*connect.Response[rpc.GetLabeledImagesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("auth.AuthService.GetLabeledImages is not implemented"))
 }

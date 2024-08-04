@@ -23,6 +23,60 @@ func (q *Queries) CountImagesByLabelerID(ctx context.Context, labelerID pgtype.I
 	return count, err
 }
 
+const findImagesByFilters = `-- name: FindImagesByFilters :many
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
+WHERE 
+  ($3::category IS NULL OR category = $3) AND
+  ($4::BIGINT IS NULL OR labeler_id = $4)
+ORDER BY updated_at DESC
+LIMIT $1 OFFSET $2
+`
+
+type FindImagesByFiltersParams struct {
+	Limit     int32
+	Offset    int32
+	Category  Category
+	LabelerID int64
+}
+
+func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFiltersParams) ([]Image, error) {
+	rows, err := q.db.Query(ctx, findImagesByFilters,
+		arg.Limit,
+		arg.Offset,
+		arg.Category,
+		arg.LabelerID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Image
+	for rows.Next() {
+		var i Image
+		if err := rows.Scan(
+			&i.ID,
+			&i.Category,
+			&i.BackgroundType,
+			&i.LabelerID,
+			&i.Name,
+			&i.DisplayName,
+			&i.Url1,
+			&i.Url2,
+			&i.Url3,
+			&i.UrlSelected,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getImageByID = `-- name: GetImageByID :one
 SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
 WHERE id = $1 AND category = $2 

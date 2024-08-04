@@ -1,4 +1,4 @@
-import { ThemeSwitch } from "@/components/theme-switch";
+// import { ThemeSwitch } from "@/components/theme-switch";
 import { Link } from "@nextui-org/link";
 import {
   Navbar as NextUINavbar,
@@ -31,7 +31,7 @@ export default function UnauthenticatedLayout({
           justify="end"
         >
           <NavbarItem className="hidden sm:flex gap-2">
-            <ThemeSwitch />
+            {/* <ThemeSwitch /> */}
           </NavbarItem>
         </NavbarContent>
       </NextUINavbar>

@@ -41,3 +41,11 @@ WHERE id = $1 AND category = $2 AND labeler_id = $3;
 -- name: CountImagesByLabelerID :one
 SELECT COUNT(*) FROM images
 WHERE labeler_id = $1;
+
+-- name: FindImagesByFilters :many
+SELECT * FROM images
+WHERE 
+  (sqlc.arg(category)::category IS NULL OR category = sqlc.arg(category)) AND
+  (sqlc.arg(labeler_id)::BIGINT = 0 OR labeler_id = sqlc.arg(labeler_id))
+ORDER BY updated_at DESC
+LIMIT $1 OFFSET $2;
