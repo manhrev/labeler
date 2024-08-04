@@ -223,6 +223,8 @@ func (m *GetLabeledImagesResponse) validate(all bool) error {
 
 	}
 
+	// no validation rules for Total
+
 	if len(errors) > 0 {
 		return GetLabeledImagesResponseMultiError(errors)
 	}

@@ -16,4 +16,5 @@ message GetLabeledImagesRequest {
 
 message GetLabeledImagesResponse {
   repeated model.Image images = 1;
+  int64 total = 2;
 }

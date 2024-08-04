@@ -11,6 +11,25 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const countImagesByFilters = `-- name: CountImagesByFilters :one
+SELECT COUNT(*) FROM images
+WHERE 
+  ($1::category IS NULL OR category = $1) AND
+  ($2::BIGINT = 0 OR labeler_id = $2)
+`
+
+type CountImagesByFiltersParams struct {
+	Category  Category
+	LabelerID int64
+}
+
+func (q *Queries) CountImagesByFilters(ctx context.Context, arg CountImagesByFiltersParams) (int64, error) {
+	row := q.db.QueryRow(ctx, countImagesByFilters, arg.Category, arg.LabelerID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countImagesByLabelerID = `-- name: CountImagesByLabelerID :one
 SELECT COUNT(*) FROM images
 WHERE labeler_id = $1
@@ -26,25 +45,25 @@ func (q *Queries) CountImagesByLabelerID(ctx context.Context, labelerID pgtype.I
 const findImagesByFilters = `-- name: FindImagesByFilters :many
 SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
 WHERE 
-  ($3::category IS NULL OR category = $3) AND
-  ($4::BIGINT IS NULL OR labeler_id = $4)
+  ($1::category IS NULL OR category = $1) AND
+  ($2::BIGINT = 0 OR labeler_id = $2)
 ORDER BY updated_at DESC
-LIMIT $1 OFFSET $2
+LIMIT $4::BIGINT OFFSET $3::BIGINT
 `
 
 type FindImagesByFiltersParams struct {
-	Limit     int32
-	Offset    int32
 	Category  Category
 	LabelerID int64
+	Off       int64
+	Lim       int64
 }
 
 func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFiltersParams) ([]Image, error) {
 	rows, err := q.db.Query(ctx, findImagesByFilters,
-		arg.Limit,
-		arg.Offset,
 		arg.Category,
 		arg.LabelerID,
+		arg.Off,
+		arg.Lim,
 	)
 	if err != nil {
 		return nil, err

@@ -45,7 +45,13 @@ WHERE labeler_id = $1;
 -- name: FindImagesByFilters :many
 SELECT * FROM images
 WHERE 
-  (sqlc.arg(category)::category IS NULL OR category = sqlc.arg(category)) AND
-  (sqlc.arg(labeler_id)::BIGINT = 0 OR labeler_id = sqlc.arg(labeler_id))
+  (@category::category IS NULL OR category = @category) AND
+  (@labeler_id::BIGINT = 0 OR labeler_id = @labeler_id)
 ORDER BY updated_at DESC
-LIMIT $1 OFFSET $2;
+LIMIT @lim::BIGINT OFFSET @off::BIGINT;
+
+-- name: CountImagesByFilters :one
+SELECT COUNT(*) FROM images
+WHERE 
+  (@category::category IS NULL OR category = @category) AND
+  (@labeler_id::BIGINT = 0 OR labeler_id = @labeler_id);
