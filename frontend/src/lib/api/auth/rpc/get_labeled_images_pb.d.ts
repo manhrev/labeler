@@ -55,6 +55,11 @@ export declare class GetLabeledImagesResponse extends Message<GetLabeledImagesRe
    */
   images: Image[];
 
+  /**
+   * @generated from field: int64 total = 2;
+   */
+  total: bigint;
+
   constructor(data?: PartialMessage<GetLabeledImagesResponse>);
 
   static readonly runtime: typeof proto3;

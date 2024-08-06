@@ -111,6 +111,8 @@ type Image struct {
 	UrlSelected    pgtype.Int2
 	CreatedAt      pgtype.Timestamptz
 	UpdatedAt      pgtype.Timestamptz
+	Region         pgtype.Text
+	DisplayOrder   pgtype.Int4
 }
 
 type User struct {

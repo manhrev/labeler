@@ -43,7 +43,7 @@ func (q *Queries) CountImagesByLabelerID(ctx context.Context, labelerID pgtype.I
 }
 
 const findImagesByFilters = `-- name: FindImagesByFilters :many
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
 WHERE 
   ($1::category IS NULL OR category = $1) AND
   ($2::BIGINT = 0 OR labeler_id = $2)
@@ -85,6 +85,8 @@ func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFilte
 			&i.UrlSelected,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.Region,
+			&i.DisplayOrder,
 		); err != nil {
 			return nil, err
 		}
@@ -97,7 +99,7 @@ func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFilte
 }
 
 const getImageByID = `-- name: GetImageByID :one
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
 WHERE id = $1 AND category = $2 
 LIMIT 1
 `
@@ -123,13 +125,17 @@ func (q *Queries) GetImageByID(ctx context.Context, arg GetImageByIDParams) (Ima
 		&i.UrlSelected,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.Region,
+		&i.DisplayOrder,
 	)
 	return i, err
 }
 
 const getImageToLabel = `-- name: GetImageToLabel :one
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at FROM images
-WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) LIMIT 1
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
+WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) 
+ORDER BY display_order DESC
+LIMIT 1
 `
 
 func (q *Queries) GetImageToLabel(ctx context.Context, labelerID pgtype.Int8) (Image, error) {
@@ -148,6 +154,8 @@ func (q *Queries) GetImageToLabel(ctx context.Context, labelerID pgtype.Int8) (I
 		&i.UrlSelected,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.Region,
+		&i.DisplayOrder,
 	)
 	return i, err
 }

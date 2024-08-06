@@ -26,6 +26,7 @@ export const GetLabeledImagesResponse = proto3.makeMessageType(
   "rpc.GetLabeledImagesResponse",
   () => [
     { no: 1, name: "images", kind: "message", T: Image, repeated: true },
+    { no: 2, name: "total", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
   ],
 );
 

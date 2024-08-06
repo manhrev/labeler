@@ -1,6 +1,8 @@
 -- name: GetImageToLabel :one
 SELECT * FROM images
-WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) LIMIT 1;
+WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) 
+ORDER BY display_order DESC
+LIMIT 1;
 
 -- name: UpdateImageLabelerID :exec
 UPDATE images
