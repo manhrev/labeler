@@ -85,8 +85,17 @@ export default function LabelPage() {
     });
 
   const loading = getMyImageLoading || getImageLoading || updateLoading;
-  const { category, displayName, id, url1, url2, url3 } =
-    images?.[images.length - 1] ?? new ImagePb();
+  const {
+    category,
+    displayName,
+    id,
+    url1,
+    url2,
+    url3,
+    url1Title,
+    url2Title,
+    url3Title,
+  } = images?.[images.length - 1] ?? new ImagePb();
   const categoryStr = (() => {
     switch (category) {
       case Category.C_BASKETBALL_COMPETITION:
@@ -200,7 +209,11 @@ export default function LabelPage() {
                   >
                     <div className="flex justify-center w-full">
                       <div className="grid grid-cols-3 gap-4 w-full justify-center max-w-[800px] justify-self-center">
-                        {[url1, url2, url3].map((url, index) => (
+                        {[
+                          [url1, url1Title],
+                          [url2, url2Title],
+                          [url3, url3Title],
+                        ].map(([url, title], index) => (
                           <div
                             className="flex justify-center w-full"
                             key={index}
@@ -213,9 +226,12 @@ export default function LabelPage() {
                                 <CustomRadio
                                   value={(index + 1).toString()}
                                   description={
-                                    "Hình " +
-                                    (index + 1) +
-                                    ` (${url.split(".")?.pop()})`
+                                    <span>
+                                      {`${index + 1}. ${title.slice(
+                                        0,
+                                        47
+                                      )} (${url.split(".")?.pop()})`}
+                                    </span>
                                   }
                                   onChange={onChange}
                                   className="bg-[url('/transparent-grid.svg')] border"
