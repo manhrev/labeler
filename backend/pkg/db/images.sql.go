@@ -43,7 +43,7 @@ func (q *Queries) CountImagesByLabelerID(ctx context.Context, labelerID pgtype.I
 }
 
 const findImagesByFilters = `-- name: FindImagesByFilters :many
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order, url1_title, url2_title, url3_title FROM images
 WHERE 
   ($1::category IS NULL OR category = $1) AND
   ($2::BIGINT = 0 OR labeler_id = $2)
@@ -87,6 +87,9 @@ func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFilte
 			&i.UpdatedAt,
 			&i.Region,
 			&i.DisplayOrder,
+			&i.Url1Title,
+			&i.Url2Title,
+			&i.Url3Title,
 		); err != nil {
 			return nil, err
 		}
@@ -99,7 +102,7 @@ func (q *Queries) FindImagesByFilters(ctx context.Context, arg FindImagesByFilte
 }
 
 const getImageByID = `-- name: GetImageByID :one
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order, url1_title, url2_title, url3_title FROM images
 WHERE id = $1 AND category = $2 
 LIMIT 1
 `
@@ -127,12 +130,15 @@ func (q *Queries) GetImageByID(ctx context.Context, arg GetImageByIDParams) (Ima
 		&i.UpdatedAt,
 		&i.Region,
 		&i.DisplayOrder,
+		&i.Url1Title,
+		&i.Url2Title,
+		&i.Url3Title,
 	)
 	return i, err
 }
 
 const getImageToLabel = `-- name: GetImageToLabel :one
-SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order FROM images
+SELECT id, category, background_type, labeler_id, name, display_name, url1, url2, url3, url_selected, created_at, updated_at, region, display_order, url1_title, url2_title, url3_title FROM images
 WHERE url_selected IS NULL AND (labeler_id IS NULL OR labeler_id = $1) 
 ORDER BY display_order DESC
 LIMIT 1
@@ -156,6 +162,9 @@ func (q *Queries) GetImageToLabel(ctx context.Context, labelerID pgtype.Int8) (I
 		&i.UpdatedAt,
 		&i.Region,
 		&i.DisplayOrder,
+		&i.Url1Title,
+		&i.Url2Title,
+		&i.Url3Title,
 	)
 	return i, err
 }

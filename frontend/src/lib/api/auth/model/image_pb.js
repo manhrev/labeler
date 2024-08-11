@@ -47,6 +47,9 @@ export const Image = proto3.makeMessageType(
     { no: 8, name: "url2", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 9, name: "url3", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 10, name: "url_selected", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 11, name: "url1_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 12, name: "url2_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 13, name: "url3_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 

@@ -76,6 +76,12 @@ func (m *Image) validate(all bool) error {
 
 	// no validation rules for UrlSelected
 
+	// no validation rules for Url1Title
+
+	// no validation rules for Url2Title
+
+	// no validation rules for Url3Title
+
 	if len(errors) > 0 {
 		return ImageMultiError(errors)
 	}

@@ -15,6 +15,9 @@ message Image {
     string url2 = 8;
     string url3 = 9;
     string url_selected = 10;
+    string url1_title = 11;
+    string url2_title = 12;
+    string url3_title = 13;
 }
 
 enum Category {

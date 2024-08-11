@@ -110,6 +110,21 @@ export declare class Image extends Message<Image> {
    */
   urlSelected: string;
 
+  /**
+   * @generated from field: string url1_title = 11;
+   */
+  url1Title: string;
+
+  /**
+   * @generated from field: string url2_title = 12;
+   */
+  url2Title: string;
+
+  /**
+   * @generated from field: string url3_title = 13;
+   */
+  url3Title: string;
+
   constructor(data?: PartialMessage<Image>);
 
   static readonly runtime: typeof proto3;

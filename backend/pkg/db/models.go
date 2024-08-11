@@ -113,6 +113,9 @@ type Image struct {
 	UpdatedAt      pgtype.Timestamptz
 	Region         pgtype.Text
 	DisplayOrder   pgtype.Int4
+	Url1Title      string
+	Url2Title      string
+	Url3Title      string
 }
 
 type User struct {

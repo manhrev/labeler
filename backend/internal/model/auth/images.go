@@ -28,6 +28,9 @@ func ImageDbToPb(image db.Image) *model.Image {
 		Url2:           image.Url2,
 		Url3:           image.Url3,
 		UrlSelected:    urlSelected,
+		Url1Title:      image.Url1Title,
+		Url2Title:      image.Url2Title,
+		Url3Title:      image.Url3Title,
 	}
 }
 

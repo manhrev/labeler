@@ -1,6 +1,7 @@
 START TRANSACTION;
 
-alter table images add column region text default null;
-alter table images add column display_order int default 0;
+ALTER TABLE images 
+    ADD column region text DEFAULT NULL,
+    ADD column display_order int DEFAULT 0;
 
 COMMIT;
