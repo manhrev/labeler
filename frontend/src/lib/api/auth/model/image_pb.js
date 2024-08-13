@@ -50,6 +50,7 @@ export const Image = proto3.makeMessageType(
     { no: 11, name: "url1_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 12, name: "url2_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 13, name: "url3_title", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 14, name: "region", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 

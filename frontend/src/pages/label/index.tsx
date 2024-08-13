@@ -95,6 +95,7 @@ export default function LabelPage() {
     url1Title,
     url2Title,
     url3Title,
+    region,
   } = images?.[images.length - 1] ?? new ImagePb();
   const categoryStr = (() => {
     switch (category) {
@@ -190,11 +191,11 @@ export default function LabelPage() {
               </Link>
             </div>
             <span>
-              Loại: {categoryStr} - ID: {id.toString()}
+              Loại: {categoryStr} - ID: {id.toString()} <br /> Vùng: {region}
             </span>
           </div>
 
-          <div className="md:h-[60vh] h-[50vh] min-h-[450px] w-full flex flex-col gap-8 items-center">
+          <div className="md:h-[60vh] h-[50vh] min-h-[450px] md:min-h-[500px] w-full flex flex-col gap-8 items-center">
             {!loading && (
               <>
                 <div className="w-full">

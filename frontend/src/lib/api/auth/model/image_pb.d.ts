@@ -125,6 +125,11 @@ export declare class Image extends Message<Image> {
    */
   url3Title: string;
 
+  /**
+   * @generated from field: string region = 14;
+   */
+  region: string;
+
   constructor(data?: PartialMessage<Image>);
 
   static readonly runtime: typeof proto3;
