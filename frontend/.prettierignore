@@ -1,0 +1,9 @@
+docs
+lib
+build
+dist
+out
+.next
+*.svg
+tsconfig.json
+*.ejs

@@ -11,9 +11,6 @@ dependencies:
   '@connectrpc/connect':
     specifier: ^1.1.4
     version: 1.1.4(@bufbuild/protobuf@1.5.1)
-  '@connectrpc/connect-query':
-    specifier: ^1.4.1
-    version: 1.4.1(@bufbuild/protobuf@1.5.1)(@connectrpc/connect@1.1.4)(@tanstack/react-query@5.51.16)(react-dom@18.3.1)(react@18.3.1)
   '@connectrpc/connect-web':
     specifier: ^1.1.4
     version: 1.1.4(@bufbuild/protobuf@1.5.1)(@connectrpc/connect@1.1.4)
@@ -56,15 +53,15 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.51.16
     version: 5.51.16(react@18.3.1)
+  '@tanstack/react-table':
+    specifier: ^8.20.1
+    version: 8.20.1(react-dom@18.3.1)(react@18.3.1)
   '@types/node':
     specifier: ^22.0.2
     version: 22.0.2
   clsx:
     specifier: 2.1.1
     version: 2.1.1
-  cross-env:
-    specifier: ^7.0.3
-    version: 7.0.3
   framer-motion:
     specifier: ~11.1.1
     version: 11.1.1(react-dom@18.3.1)(react@18.3.1)
@@ -142,6 +139,9 @@ devDependencies:
   postcss:
     specifier: ^8.4.38
     version: 8.4.38
+  prettier:
+    specifier: ^3.2.5
+    version: 3.3.3
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
@@ -374,23 +374,6 @@ packages:
 
   /@bufbuild/protobuf@1.5.1:
     resolution: {integrity: sha512-LX+MeB1AzlbqgJXkq83lilQpLGnPvsAMj7SH8KtJAmQfBc55ee78Stxuff/HMw0xLMYJN3P1FBh5TENgjJof1w==}
-    dev: false
-
-  /@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.5.1)(@connectrpc/connect@1.1.4)(@tanstack/react-query@5.51.16)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-kRv0ka+kSBpnG/56H/vLbQEHkcaFkVb2tZ4fo5m6V3AxKMFvrl35i2nO7+9cmPjhzzbTbE8W/zJqYZkO4YE+FA==}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.3.3
-      '@connectrpc/connect': ^1.1.2
-      '@tanstack/react-query': 5.x
-      react: ^18.3.1
-      react-dom: ^18.3.1
-    dependencies:
-      '@bufbuild/protobuf': 1.5.1
-      '@connectrpc/connect': 1.1.4(@bufbuild/protobuf@1.5.1)
-      '@tanstack/react-query': 5.51.16(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      stable-hash: 0.0.4
     dev: false
 
   /@connectrpc/connect-web@1.1.4(@bufbuild/protobuf@1.5.1)(@connectrpc/connect@1.1.4):
@@ -3676,6 +3659,23 @@ packages:
       react: 18.3.1
     dev: false
 
+  /@tanstack/react-table@8.20.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-PJK+07qbengObe5l7c8vCdtefXm8cyR4i078acWrHbdm8JKw1ES7YpmOtVt9ALUVEEFAHscdVpGRhRgikgFMbQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      '@tanstack/table-core': 8.20.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /@tanstack/table-core@8.20.1:
+    resolution: {integrity: sha512-5Ly5TIRHnWH7vSDell9B/OVyV380qqIJVg7H7R7jU4fPEmOD4smqAX7VRflpYI09srWR8aj5OLD2Ccs1pI5mTg==}
+    engines: {node: '>=12'}
+    dev: false
+
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
     dependencies:
@@ -4235,14 +4235,6 @@ packages:
     resolution: {integrity: sha512-J/r5JTHSmzTxbiYYrzXg9w1VpqrYt+gexenBE9pugeyhwPZTAEJddyiReJWsLO6uNQ8xJZFbod6XC7KKwatCiA==}
     requiresBuild: true
     dev: true
-
-  /cross-env@7.0.3:
-    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
-    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
-    hasBin: true
-    dependencies:
-      cross-spawn: 7.0.3
-    dev: false
 
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -6192,10 +6184,6 @@ packages:
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
-
-  /stable-hash@0.0.4:
-    resolution: {integrity: sha512-LjdcbuBeLcdETCrPn9i8AYAZ1eCtu4ECAWtP7UleOiZ9LzVxRzzUZEoZ8zB24nhkQnDWyET0I+3sWokSDS3E7g==}
-    dev: false
 
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
